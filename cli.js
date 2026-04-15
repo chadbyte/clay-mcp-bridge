@@ -67,17 +67,19 @@ function install() {
     process.exit(1);
   }
 
-  // Resolve the host script path (this package's host.js)
-  var hostScript = path.join(__dirname, "host.js");
+  // Copy host.js to a permanent location (npx cache is temporary)
+  var installDir = path.join(os.homedir(), ".clay", "mcp-bridge");
+  var installedHost = path.join(installDir, "host.js");
+  var wrapperPath = path.join(installDir, "clay-mcp-host");
 
-  // Create a wrapper script that node can execute
-  var wrapperDir = path.join(os.homedir(), ".clay", "mcp-bridge");
-  var wrapperPath = path.join(wrapperDir, "clay-mcp-host");
+  if (!fs.existsSync(installDir)) fs.mkdirSync(installDir, { recursive: true });
 
-  if (!fs.existsSync(wrapperDir)) fs.mkdirSync(wrapperDir, { recursive: true });
+  // Copy host.js from package to permanent location
+  var hostSource = path.join(__dirname, "host.js");
+  fs.copyFileSync(hostSource, installedHost);
 
-  // Write wrapper that calls node with host.js
-  var wrapper = "#!/bin/bash\nexec node \"" + hostScript + "\"\n";
+  // Write wrapper that calls node with the copied host.js
+  var wrapper = "#!/bin/bash\nexec node \"" + installedHost + "\"\n";
   fs.writeFileSync(wrapperPath, wrapper, { mode: 0o755 });
 
   var manifest = {
