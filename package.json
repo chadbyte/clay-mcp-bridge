@@ -3,12 +3,17 @@
   "version": "0.1.0",
   "description": "Native Messaging Host for Clay Chrome Extension. Bridges local MCP servers.",
   "bin": {
-    "clay-mcp-bridge": "./cli.js"
+    "clay-mcp-bridge": "cli.js"
   },
   "files": [
     "cli.js",
     "host.js"
   ],
-  "keywords": ["clay", "mcp", "chrome-extension", "native-messaging"],
+  "keywords": [
+    "clay",
+    "mcp",
+    "chrome-extension",
+    "native-messaging"
+  ],
   "license": "MIT"
 }
