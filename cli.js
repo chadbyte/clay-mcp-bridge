@@ -78,8 +78,9 @@ function install() {
   var hostSource = path.join(__dirname, "host.js");
   fs.copyFileSync(hostSource, installedHost);
 
-  // Write wrapper that calls node with the copied host.js
-  var wrapper = "#!/bin/bash\nexec node \"" + installedHost + "\"\n";
+  // Write wrapper with absolute node path (Chrome/Arc don't read user PATH)
+  var nodePath = process.execPath;
+  var wrapper = "#!/bin/bash\nexec \"" + nodePath + "\" \"" + installedHost + "\"\n";
   fs.writeFileSync(wrapperPath, wrapper, { mode: 0o755 });
 
   var manifest = {

@@ -1,6 +1,6 @@
 {
   "name": "clay-mcp-bridge",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Native Messaging Host for Clay Chrome Extension. Bridges local MCP servers.",
   "bin": {
     "clay-mcp-bridge": "cli.js"
