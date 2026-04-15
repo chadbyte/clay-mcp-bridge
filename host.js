@@ -405,12 +405,14 @@ function getAllServers() {
   for (var k = 0; k < allNames.length; k++) {
     var n = allNames[k];
     var cfg = merged[n];
+    var entry = _processes[n];
     servers.push({
       name: n,
       transport: cfg.url ? "http" : "stdio",
       command: cfg.command || null,
       url: cfg.url || null,
-      running: !!(_processes[n] && _processes[n].ready)
+      running: !!(entry && entry.ready),
+      tools: (entry && entry.tools) || []
     });
   }
   return { servers: servers };
@@ -532,3 +534,15 @@ function shutdown() {
 
 process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);
+
+// ---------- Auto-start servers from config ----------
+
+(function autoStart() {
+  var result = getAllServers();
+  var servers = result.servers || [];
+  for (var i = 0; i < servers.length; i++) {
+    if (servers[i].transport === "stdio" && servers[i].command) {
+      spawnServer(servers[i].name);
+    }
+  }
+})();
